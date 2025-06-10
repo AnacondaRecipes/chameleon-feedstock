@@ -1,5 +1,5 @@
 {% set name = "Chameleon" %}
-{% set version = "3.6.2" %}
+{% set version = "4.6.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,20 +7,22 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 9a9e5e068ee323817705a793cc03538677915c3b99c3f8a4ecba42e62d66862b
+  sha256: 910cd729f6f7f38adad132ee51faa4f3ccc8344a6721aac31aa51a31f5781c1b
 
 build:
   number: 0
-  noarch: python
-  script: "{{ PYTHON }} -m pip install . -vv"
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: true  # [py<39]
 
 requirements:
   host:
-    - python
     - pip
+    - python
+    - setuptools >=42
+    - wheel
   run:
     - python
-    - setuptools
+    - importlib-metadata # [py<310]
 
 test:
   imports:
@@ -28,12 +30,23 @@ test:
     - chameleon.tests
     - chameleon.utils
     - chameleon.zpt
+  commands:
+    - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest --pyargs chameleon.tests
+  requires:
+    - pip
+    - pytest
 
 about:
   home: https://chameleon.readthedocs.org
-  license: Repoze
-  license_url: http://repoze.org/license.html
-  license_family: BSD
+  # Zope Public License (ZPL) Version 2.1
+  # This license has been certified as open source. It has also
+  # been designated as GPL compatible by the Free Software
+  # Foundation (FSF).
+  # https://repoze.org/license.html
+  license: ZPL
+  license_family: Other
   license_file: LICENSE.txt
   summary: HTML/XML template engine for Python
   description: |
@@ -41,8 +54,9 @@ about:
     the document output of a web application, typically HTML markup or XML.
   doc_url: https://chameleon.readthedocs.org
   dev_url: https://github.com/malthe/chameleon
-  doc_source_url: https://github.com/malthe/chameleon/blob/master/docs/index.rst
 
 extra:
   recipe-maintainers:
     - nehaljwani
+  skip-lints:
+    - incorrect_license
