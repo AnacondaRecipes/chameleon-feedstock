@@ -40,12 +40,7 @@ test:
 
 about:
   home: https://chameleon.readthedocs.org
-  # Zope Public License (ZPL) Version 2.1
-  # This license has been certified as open source. It has also
-  # been designated as GPL compatible by the Free Software
-  # Foundation (FSF).
-  # https://repoze.org/license.html
-  license: ZPL
+  license: BSD-4-Clause AND ZPL-2.1 AND PSF-2.0
   license_family: Other
   license_file: LICENSE.txt
   summary: HTML/XML template engine for Python
@@ -58,5 +53,3 @@ about:
 extra:
   recipe-maintainers:
     - nehaljwani
-  skip-lints:
-    - incorrect_license
