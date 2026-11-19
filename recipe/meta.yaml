@@ -1,18 +1,18 @@
 {% set name = "Chameleon" %}
-{% set version = "4.6.0" %}
+{% set version = "4.6.1" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 910cd729f6f7f38adad132ee51faa4f3ccc8344a6721aac31aa51a31f5781c1b
+  url: https://pypi.org/packages/source/{{ name[0]|lower }}/{{ name|lower }}/{{ name|lower }}-{{ version }}.tar.gz
+  sha256: c1775d54907966c8e397a1292b1a2755d254b7f070d0719ac9e579d9ab81e5b5
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  skip: true  # [py<39]
+  skip: true  # [py<311]
 
 requirements:
   host:
@@ -22,7 +22,7 @@ requirements:
     - wheel
   run:
     - python
-    - importlib-metadata # [py<310]
+    - importlib-metadata  # [py<310]
 
 test:
   imports:
@@ -33,13 +33,14 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest --pyargs chameleon.tests
+    - pytest -vv --pyargs chameleon.tests
   requires:
     - pip
     - pytest
+    - setuptools  # test_loader builds sample egg/wheel packages with setuptools.setup
 
 about:
-  home: https://chameleon.readthedocs.org
+  home: https://chameleon.readthedocs.io
   license: BSD-4-Clause AND ZPL-2.1 AND PSF-2.0
   license_family: Other
   license_file: LICENSE.txt
@@ -47,7 +48,7 @@ about:
   description: |
     Chameleon is an HTML/XML template engine for Python designed to generate
     the document output of a web application, typically HTML markup or XML.
-  doc_url: https://chameleon.readthedocs.org
+  doc_url: https://chameleon.readthedocs.io
   dev_url: https://github.com/malthe/chameleon
 
 extra:
